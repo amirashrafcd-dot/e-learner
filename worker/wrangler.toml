@@ -1,0 +1,12 @@
+name = "e-learner-content-api"
+main = "src/index.js"
+compatibility_date = "2026-11-20"
+
+[vars]
+GITHUB_OWNER = "amirashrafcd-dot"
+GITHUB_REPO = "e-learner"
+GITHUB_BRANCH = "main"
+ALLOWED_ORIGIN = "https://amirashrafcd-dot.github.io"
+
+# Secrets are configured in the Cloudflare dashboard or with wrangler secret put.
+# Required secrets: ADMIN_PASSWORD and GITHUB_TOKEN
