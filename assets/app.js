@@ -118,6 +118,17 @@ function initTawjihiCalculator(config){
  });
  build();
 }
+function initAboutPage(site){
+ const founder=String(site.founder||"أمير الرياشي"),supervisor=String(site.supervisor||"Gaza Galaxy"),email=String(site.contactEmail||"");
+ ["aboutFounder","aboutFounderInline"].forEach(id=>{const el=$(id);if(el)el.textContent=founder;});
+ ["aboutSupervisor","aboutSupervisorInline"].forEach(id=>{const el=$(id);if(el)el.textContent=supervisor;});
+ const mail=$("aboutEmail"),mailText=$("aboutEmailText");
+ if(mail){mail.hidden=!email;mail.href=email?"mailto:"+email:"#";if(mailText)mailText.textContent=email;}
+ const phone=String(site.whatsappNumber||"").replace(/\\D/g,""),wa=$("aboutWhatsapp");
+ if(wa){wa.hidden=!phone;wa.href=phone?"https://wa.me/"+phone:"#";}
+ const telegram=window.safeURL(site.telegramChannelUrl),tg=$("aboutTelegram");
+ if(tg){tg.hidden=!telegram;if(telegram)tg.href=telegram;}
+}
 function configureContacts(site){
  const email=site.contactEmail||"",phone=String(site.whatsappNumber||"").replace(/\D/g,""),message=site.teacherMessage||"مرحباً، أرغب بالمساهمة بمصدر تعليمي في e-Learner.";
  const mail=(subject,body)=>email?"mailto:"+email+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body):"index.html#contact";
@@ -128,7 +139,7 @@ function configureContacts(site){
 }
 function init(){
  initGeneral();
- fetch("data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("تعذر تحميل البيانات.");return r.json();}).then(config=>{if(!config?.branches)throw new Error("ملف البيانات غير مكتمل.");window.EL_CONFIG=config;const all=collect(config.branches);configureContacts(config.site||{});initAnalytics(config.site||{});initHomepage(config,all);document.dispatchEvent(new CustomEvent("el:data-ready",{detail:config}));}).catch(error=>{document.dispatchEvent(new CustomEvent("el:data-error",{detail:{message:error.message}}));const results=$("quickFindResults");if(results){results.hidden=false;results.textContent="تعذّر تحميل المكتبة. تحقق من الاتصال ثم أعد تحميل الصفحة.";}const latest=$("latestEmpty");if(latest){latest.hidden=false;latest.textContent="تعذّر تحميل المصادر حالياً.";} });
+ fetch("data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("تعذر تحميل البيانات.");return r.json();}).then(config=>{if(!config?.branches)throw new Error("ملف البيانات غير مكتمل.");window.EL_CONFIG=config;const all=collect(config.branches);configureContacts(config.site||{});initAnalytics(config.site||{});initHomepage(config,all);initAboutPage(config.site||{});document.dispatchEvent(new CustomEvent("el:data-ready",{detail:config}));}).catch(error=>{document.dispatchEvent(new CustomEvent("el:data-error",{detail:{message:error.message}}));const results=$("quickFindResults");if(results){results.hidden=false;results.textContent="تعذّر تحميل المكتبة. تحقق من الاتصال ثم أعد تحميل الصفحة.";}const latest=$("latestEmpty");if(latest){latest.hidden=false;latest.textContent="تعذّر تحميل المصادر حالياً.";} });
 }
 document.addEventListener("DOMContentLoaded",init);
 })();
