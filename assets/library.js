@@ -1,111 +1,46 @@
 (() => {
-  "use strict";
-  const $ = id => document.getElementById(id);
-  const params = new URLSearchParams(location.search);
-  const branchKey = params.get("branch") === "literary" ? "literary" : "scientific";
-  const typeLabels = {book:"كتاب",summary:"ملزمة",exam:"اختبار",worksheet:"ورقة عمل",solution:"حلول",pastExam:"امتحان وزارة سابق",video:"شرح فيديو"};
-  const typeIcons = {book:"▤",summary:"▥",exam:"✎",worksheet:"▧",solution:"✓",pastExam:"▣",video:"▶"};
-  let config=null, branch=null, currentSubject=params.get("subject")||"", currentType=params.get("type")||"all", currentGrade=params.get("grade")||"";
-  const escapeHTML = window.escapeHTML || (v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])));
-  const safeURL = window.safeURL || (v=>{try{const u=new URL(String(v||""));return ["http:","https:"].includes(u.protocol)?u.href:"";}catch{return "";}});
-  function updateURL() {
-    const next = new URLSearchParams();
-    next.set("branch",branchKey);
-    if (currentSubject) next.set("subject",currentSubject);
-    if (currentType !== "all") next.set("type",currentType);
-    if (currentGrade) next.set("grade",currentGrade);
-    history.replaceState(null,"",location.pathname+"?"+next.toString());
-  }
-  function resources(){const list=branch?.subjects?.[currentSubject];return Array.isArray(list)?list:[];}
-  function updateSelectOptions(all) {
-    const gradeSelect=$("gradeFilter"), years=[...new Set(all.map(x=>String(x.year||"")).filter(Boolean))].sort().reverse();
-    const validGrades=[...new Set(all.map(x=>String(x.grade||"")).filter(Boolean))];
-    gradeSelect.innerHTML='<option value="">كل الصفوف</option>'+validGrades.sort().map(g=>'<option value="'+escapeHTML(g)+'">'+(g==="11"?"الحادي عشر":g==="12"?"الثاني عشر":escapeHTML(g))+'</option>').join("");
-    gradeSelect.value=currentGrade;
-    const yearSelect=$("yearFilter"), previous=yearSelect.value;
-    yearSelect.innerHTML='<option value="">كل السنوات</option>'+years.map(y=>'<option value="'+escapeHTML(y)+'">'+escapeHTML(y)+'</option>').join("");
-    if(years.includes(previous)) yearSelect.value=previous;
-  }
-  function paintTypeButtons(all) {
-    const counts={all:all.length};
-    all.forEach(item=>counts[item.type]=(counts[item.type]||0)+1);
-    if(currentType!=="all" && !counts[currentType]) currentType="all";
-    document.querySelectorAll("#filterRow [data-filter]").forEach(button=>{
-      const type=button.dataset.filter, count=counts[type]||0;
-      button.hidden=type!=="all" && count===0;
-      button.classList.toggle("active",type===currentType);
-      const badge=button.querySelector("[data-count]");
-      if(badge) badge.textContent=String(count);
-      button.setAttribute("aria-pressed",String(type===currentType));
-    });
-  }
-  function render() {
-    if(!branch)return;
-    const all=resources();
-    paintTypeButtons(all);
-    updateSelectOptions(all);
-    const term=$("termFilter").value, year=$("yearFilter").value, query=$("searchInput").value.trim().toLocaleLowerCase("ar");
-    const filtered=all.filter(item=>{
-      const matchesType=currentType==="all"||item.type===currentType;
-      const matchesGrade=!currentGrade||String(item.grade||"")===currentGrade;
-      const matchesTerm=!term||item.term===term, matchesYear=!year||String(item.year||"")===year;
-      const searchable=[item.title,item.teacher,item.description,item.year,item.term,item.unit].join(" ").toLocaleLowerCase("ar");
-      return matchesType&&matchesGrade&&matchesTerm&&matchesYear&&(!query||searchable.includes(query));
-    });
-    const sort=$("sortFilter").value;
-    filtered.sort((a,b)=>{
-      if(sort==="az")return String(a.title||"").localeCompare(String(b.title||""),"ar");
-      const da=Date.parse(a.added||"")||0, db=Date.parse(b.added||"")||0;
-      const ya=Number(a.year)||0, yb=Number(b.year)||0;
-      return sort==="oldest" ? (da-db)||(ya-yb) : (db-da)||(yb-ya);
-    });
-    $("branchTitle").textContent=branch.title; $("branchBreadcrumb").textContent=branch.title;
-    $("branchDescription").textContent=branch.description; $("branchSymbol").textContent=branch.symbol;
-    $("subjectTitle").textContent=currentSubject; $("subjectCount").textContent=Object.keys(branch.subjects||{}).length;
-    $("resourceCount").textContent=all.length+" مصدر في "+currentSubject;
-    $("activeSubjectHint").textContent=currentSubject;
-    $("countAll").textContent=all.length;
-    $("visibleCount").textContent="عرض "+filtered.length+" من "+all.length;
-    const grid=$("resourceGrid"); grid.innerHTML="";
-    $("emptyState").hidden=filtered.length>0;
-    $("emptyState").querySelector("h3").textContent=all.length?"لا توجد نتائج مطابقة":"لم نضف مصادر لهذه المادة بعد";
-    $("emptyState").querySelector("p").textContent=all.length?"جرّب تغيير كلمات البحث أو الفلاتر.":"يمكنك اقتراح مصدر تعليمي لإضافته إلى المكتبة.";
-    const subjectList=$("subjectList"); subjectList.innerHTML="";
-    Object.keys(branch.subjects||{}).forEach(subject=>{
-      const btn=document.createElement("button");btn.type="button";btn.className="subject-button"+(subject===currentSubject?" active":"");
-      btn.innerHTML='<span class="subject-dot"></span><span>'+escapeHTML(subject)+'</span><b>←</b>';
-      btn.addEventListener("click",()=>{currentSubject=subject;updateURL();render();});subjectList.appendChild(btn);
-    });
-    filtered.forEach(item=>{
-      const card=document.createElement("article");card.className="resource-card";
-      const url=safeURL(item.url||item.driveUrl), mirror=safeURL(item.mirrorUrl);
-      card.innerHTML='<div class="resource-card-top"><span class="resource-icon icon-'+escapeHTML(item.type)+'">'+(typeIcons[item.type]||"▤")+'</span><span class="resource-type">'+(typeLabels[item.type]||"مصدر")+'</span></div>'+
-        '<h3>'+escapeHTML(item.title||"مصدر بدون عنوان")+'</h3><p>'+escapeHTML(item.description||"")+'</p>'+
-        '<div class="resource-meta"><span>'+escapeHTML(item.grade?("الصف "+(item.grade==="11"?"الحادي عشر":"الثاني عشر")):"")+'</span><span>'+escapeHTML(item.term?("الفصل "+item.term):"")+'</span><span>'+escapeHTML(item.year||"")+'</span></div>'+
-        '<div class="resource-author">'+escapeHTML(item.teacher||"")+'</div>'+
-        (url?'<a class="resource-open" href="'+escapeHTML(url)+'" target="_blank" rel="noopener noreferrer">فتح المصدر ↗</a>':'<span class="resource-open disabled">الرابط غير متوفر</span>')+
-        (mirror?'<a class="resource-open" href="'+escapeHTML(mirror)+'" target="_blank" rel="noopener noreferrer">رابط بديل ↗</a>':'');
-      grid.appendChild(card);
-    });
-    updateURL();
-  }
-  function showLoadError(message) {
-    const grid=$("resourceGrid");grid.innerHTML='<div class="empty-state"><h3>تعذّر تحميل مكتبة e-Learner</h3><p>'+escapeHTML(message||"تحقق من اتصال الإنترنت ثم أعد المحاولة.")+'</p><button class="btn btn-primary" id="retryData">إعادة المحاولة</button></div>';
-    $("retryData").addEventListener("click",()=>location.reload());
-  }
-  document.addEventListener("el:data-error",e=>showLoadError(e.detail?.message));
-  document.addEventListener("el:data-ready",e=>{
-    config=e.detail;branch=config.branches[branchKey];
-    if(!branch){showLoadError("الفرع المطلوب غير موجود في ملف البيانات.");return;}
-    if(!Object.prototype.hasOwnProperty.call(branch.subjects||{},currentSubject))currentSubject=Object.keys(branch.subjects||{})[0]||"";
-    $("scientificNav").classList.toggle("active",branchKey==="scientific");$("literaryNav").classList.toggle("active",branchKey==="literary");
-    $("filterRow").addEventListener("click",event=>{const btn=event.target.closest("[data-filter]");if(!btn)return;currentType=btn.dataset.filter;render();});
-    $("searchInput").addEventListener("input",render);
-    ["termFilter","yearFilter","sortFilter"].forEach(id=>$(id).addEventListener("change",render));
-    $("gradeFilter").addEventListener("change",()=>{currentGrade=$("gradeFilter").value;render();});
-    const site=config.site||{},email=site.contactEmail||"",phone=String(site.whatsappNumber||"").replace(/\D/g,"");
-    const message="أقترح إضافة مصدر لمادة "+currentSubject+" في e-Learner.";
-    $("contributeLink").href=phone?"https://wa.me/"+phone+"?text="+encodeURIComponent(message):(email?"mailto:"+email+"?subject="+encodeURIComponent("اقتراح مصدر"): "#");
-    render();
-  });
+"use strict";
+const $=id=>document.getElementById(id),params=new URLSearchParams(location.search);
+const branchKey=params.get("branch")==="literary"?"literary":"scientific";
+const labels={book:"كتاب",summary:"ملزمة",exam:"اختبار",worksheet:"ورقة عمل",solution:"حلول",pastExam:"امتحان وزارة سابق",video:"شرح فيديو"},icons={book:"▤",summary:"▥",exam:"✎",worksheet:"▧",solution:"✓",pastExam:"▣",video:"▶"};
+let config=null,branch=null,currentSubject=params.get("subject")||"",currentType=params.get("type")||"all",currentGrade=params.get("grade")||"",allSources=[];
+const esc=window.escapeHTML||String,safe=window.safeURL||(()=>""),norm=v=>String(v||"").toLocaleLowerCase("ar").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/[\u064B-\u065F\u0670]/g,"").trim();
+function resources(){return Array.isArray(branch?.subjects?.[currentSubject])?branch.subjects[currentSubject]:[];}
+function updateURL(){const p=new URLSearchParams();p.set("branch",branchKey);if(currentSubject)p.set("subject",currentSubject);if(currentType!=="all")p.set("type",currentType);if(currentGrade)p.set("grade",currentGrade);history.replaceState(null,"",location.pathname+"?"+p.toString());}
+function updateOptions(all){
+ const grade=$("gradeFilter"),units=[...new Set(all.map(x=>String(x.unit||"")).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"ar"));
+ const grades=[...new Set(all.map(x=>String(x.grade||"")).filter(Boolean))].sort();
+ grade.innerHTML='<option value="">كل الصفوف</option>'+grades.map(g=>'<option value="'+esc(g)+'">'+(g==="11"?"الحادي عشر":g==="12"?"الثاني عشر":esc(g))+'</option>').join("");grade.value=currentGrade;
+ const unit=$("unitFilter"),old=unit.value;unit.innerHTML='<option value="">كل الوحدات</option>'+units.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");if(units.includes(old))unit.value=old;
+ const years=[...new Set(all.map(x=>String(x.year||"")).filter(Boolean))].sort().reverse(),ys=$("yearFilter"),oldYear=ys.value;ys.innerHTML='<option value="">كل السنوات</option>'+years.map(y=>'<option value="'+esc(y)+'">'+esc(y)+'</option>').join("");if(years.includes(oldYear))ys.value=oldYear;
+}
+function paintButtons(all){const counts={all:all.length};all.forEach(x=>counts[x.type]=(counts[x.type]||0)+1);if(currentType!=="all"&&!counts[currentType])currentType="all";document.querySelectorAll("#filterRow [data-filter]").forEach(btn=>{const t=btn.dataset.filter,c=counts[t]||0;btn.hidden=t!=="all"&&c===0;btn.classList.toggle("active",t===currentType);btn.setAttribute("aria-pressed",String(t===currentType));const badge=btn.querySelector("[data-count]");if(badge)badge.textContent=String(c);});}
+function render(){
+ if(!branch)return;const all=resources();paintButtons(all);updateOptions(all);
+ const term=$("termFilter").value,year=$("yearFilter").value,unit=$("unitFilter").value,q=norm($("searchInput").value);
+ let filtered=all.filter(x=>(currentType==="all"||x.type===currentType)&&(!currentGrade||String(x.grade||"")===currentGrade)&&(!term||x.term===term)&&(!year||String(x.year||"")===year)&&(!unit||x.unit===unit)&&(!q||[x.title,x.teacher,x.description,x.year,x.term,x.unit].some(v=>norm(v).includes(q))));
+ const sort=$("sortFilter").value;filtered.sort((a,b)=>{if(sort==="az")return String(a.title||"").localeCompare(String(b.title||""),"ar");const da=Date.parse(a.added||"")||0,db=Date.parse(b.added||"")||0,ya=Number(a.year)||0,yb=Number(b.year)||0;return sort==="oldest"?(da-db)||(ya-yb):(db-da)||(yb-ya);});
+ $("branchTitle").textContent=branch.title||branch.name;$("branchBreadcrumb").textContent=branch.title||branch.name;$("branchDescription").textContent=branch.description||"";$("branchSymbol").textContent=branch.symbol||"";$("subjectTitle").textContent=currentSubject||"اختر مادة";$("subjectCount").textContent=Object.keys(branch.subjects||{}).length;$("resourceCount").textContent=all.length+" مصدر في "+currentSubject;$("visibleCount").textContent="عرض "+filtered.length+" من "+all.length;
+ const grid=$("resourceGrid");grid.innerHTML="";const empty=$("emptyState");empty.hidden=filtered.length>0;empty.querySelector("h3").textContent=all.length?"لا توجد نتائج مطابقة":"لم نضف مصادر لهذه المادة بعد";empty.querySelector("p").textContent=all.length?"جرّب تغيير البحث أو الفلاتر.":"يمكنك اقتراح مصدر تعليمي لإضافته إلى المكتبة.";
+ const suggest=$("emptySuggest");if(suggest){const email=config.site?.contactEmail||"";suggest.href=email?"mailto:"+email+"?subject="+encodeURIComponent("اقتراح مصدر لمادة "+currentSubject):"index.html#contact";}
+ filtered.forEach(item=>{const card=makeCard(item);grid.appendChild(card);});
+ const list=$("subjectList");list.innerHTML="";Object.keys(branch.subjects||{}).forEach(subject=>{const b=document.createElement("button");b.type="button";b.className="subject-button"+(subject===currentSubject?" active":"");b.textContent=subject;b.addEventListener("click",()=>{currentSubject=subject;currentType="all";currentGrade="";updateURL();render();});list.appendChild(b);});
+ updateURL();
+}
+function makeCard(item){
+ const url=safe(item.url||item.driveUrl),mirror=safe(item.mirrorUrl),card=document.createElement("article");card.className="resource-card";
+ const added=Date.parse(item.added||"");const fresh=added>0&&Date.now()-added<14*86400000;
+ const meta=[item.grade?"الصف "+(item.grade==="11"?"الحادي عشر":"الثاني عشر"):"",item.term?"الفصل "+item.term:"",item.year||""].filter(Boolean);
+ card.innerHTML='<div class="resource-card-top"><span class="resource-icon icon-'+esc(item.type)+'">'+(icons[item.type]||"▤")+'</span><span class="resource-type">'+esc(labels[item.type]||"مصدر")+'</span>'+(fresh?'<span class="new-badge">جديد</span>':'')+'</div><h3>'+esc(item.title||"مصدر بدون عنوان")+'</h3><p>'+esc(item.description||"")+'</p><div class="resource-meta">'+meta.map(x=>'<span>'+esc(x)+'</span>').join("")+'</div>'+(item.teacher?'<div class="resource-author">'+esc(item.teacher)+'</div>':'')+'<div class="resource-actions">'+(url?'<a class="resource-open" data-open-source href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">فتح المصدر ↗</a>':'<span class="resource-open disabled">الرابط غير متوفر</span>')+(mirror?'<a class="secondary-action" href="'+esc(mirror)+'" target="_blank" rel="noopener noreferrer">رابط بديل</a>':'')+'<button type="button" class="secondary-action favorite-toggle" aria-pressed="false">♡ المفضّلة</button><a class="secondary-action report-link" href="#">الرابط لا يعمل؟</a></div>';
+ const key=[branchKey,currentSubject,item.id||item.title||url].join("::"),favs=read("el-favorites",[]),fav=card.querySelector(".favorite-toggle");const has=favs.includes(key);fav.textContent=has?"♥ محفوظ":"♡ المفضّلة";fav.setAttribute("aria-pressed",String(has));fav.addEventListener("click",()=>{let v=read("el-favorites",[]),exists=v.includes(key);v=exists?v.filter(x=>x!==key):[...v,key];write("el-favorites",v);fav.textContent=exists?"♡ المفضّلة":"♥ محفوظ";fav.setAttribute("aria-pressed",String(!exists));});
+ const msg="مرحباً، رابط مصدر في e-Learner لا يعمل.\nالعنوان: "+(item.title||"")+"\nالمعرّف: "+(item.id||"غير متوفر")+"\nالمادة: "+currentSubject+"\nالفرع: "+branch.name;
+ const phone=String(config.site?.whatsappNumber||"").replace(/\D/g,""),email=config.site?.contactEmail||"",report=card.querySelector(".report-link");report.href=phone?"https://wa.me/"+phone+"?text="+encodeURIComponent(msg):(email?"mailto:"+email+"?subject="+encodeURIComponent("رابط مصدر لا يعمل")+"&body="+encodeURIComponent(msg):"index.html#contact");
+ card.querySelector("[data-open-source]")?.addEventListener("click",()=>{const recent=read("el-recent",[]).filter(x=>x.key!==key);recent.unshift({key,title:item.title,url,subject:currentSubject,branchName:branch.name});write("el-recent",recent.slice(0,8));});
+ return card;
+}
+const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||"null")??d;}catch{return d;}},write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}};
+function globalSearch(){const input=$("libraryGlobalSearch"),host=$("libraryGlobalResults");if(!input||!host)return;const q=norm(input.value);host.innerHTML="";if(!q){host.hidden=true;return;}const hits=allSources.filter(x=>[x.title,x.description,x.teacher,x.subject,x.branchName,labels[x.type],x.unit].some(v=>norm(v).includes(q))).slice(0,25);host.hidden=false;if(!hits.length){host.textContent="لا توجد نتائج مطابقة.";return;}hits.forEach(x=>{const a=document.createElement("a");a.className="global-result";a.href="branch.html?branch="+encodeURIComponent(x.branchKey)+"&subject="+encodeURIComponent(x.subject)+"&type="+encodeURIComponent(x.type||"all")+(x.grade?"&grade="+encodeURIComponent(x.grade):"");a.innerHTML="<b>"+esc(x.title)+"</b><span>"+esc(x.subject)+" · "+esc(x.branchName)+" · "+esc(labels[x.type]||"مصدر")+"</span>";host.appendChild(a);});}
+function loadError(message){const grid=$("resourceGrid");grid.innerHTML='<div class="empty-state"><h3>تعذّر تحميل مكتبة e-Learner</h3><p>'+esc(message||"تحقق من اتصال الإنترنت ثم أعد المحاولة.")+'</p><button class="btn btn-primary" id="retryData" type="button">إعادة المحاولة</button></div>';$("retryData").addEventListener("click",()=>location.reload());}
+document.addEventListener("el:data-error",e=>loadError(e.detail?.message));
+document.addEventListener("el:data-ready",e=>{config=e.detail;branch=config.branches[branchKey];if(!branch){loadError("الفرع المطلوب غير موجود.");return;}allSources=Object.entries(config.branches).flatMap(([bk,b])=>Object.entries(b.subjects||{}).flatMap(([s,list])=>(Array.isArray(list)?list:[]).map(x=>({...x,branchKey:bk,branchName:b.name||bk,subject:s}))));if(!Object.prototype.hasOwnProperty.call(branch.subjects||{},currentSubject))currentSubject=Object.keys(branch.subjects||{})[0]||"";$("scientificNav").classList.toggle("active",branchKey==="scientific");$("literaryNav").classList.toggle("active",branchKey==="literary");$("filterRow").addEventListener("click",e=>{const b=e.target.closest("[data-filter]");if(b){currentType=b.dataset.filter;render();}});["termFilter","yearFilter","sortFilter","unitFilter"].forEach(id=>$(id).addEventListener("change",render));$("gradeFilter").addEventListener("change",()=>{currentGrade=$("gradeFilter").value;render();});$("searchInput").addEventListener("input",render);const form=$("librarySearchForm");form?.addEventListener("submit",e=>{e.preventDefault();globalSearch();});$("libraryGlobalSearch")?.addEventListener("input",globalSearch);render();});
 })();
