@@ -53,6 +53,17 @@ function toPalestineDate(value){
  const n=m.slice(1).map(Number),target=Date.UTC(n[0],n[1]-1,n[2],n[3],n[4]);let guess=target;
  try{const fmt=new Intl.DateTimeFormat("en-GB",{timeZone:"Asia/Gaza",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"});for(let i=0;i<3;i++){const p=Object.fromEntries(fmt.formatToParts(new Date(guess)).map(x=>[x.type,x.value]));guess+=target-Date.UTC(+p.year,+p.month-1,+p.day,+p.hour,+p.minute,+p.second);}return new Date(guess);}catch{return null;}
 }
+function initAnalytics(site){
+ const cfg=site?.analytics||{};
+ if(cfg.enabled!==true||cfg.provider!=="cloudflare"||typeof cfg.siteToken!=="string"||!cfg.siteToken.trim())return;
+ if(document.querySelector('script[data-el-analytics="cloudflare"]'))return;
+ const script=document.createElement("script");
+ script.type="module";
+ script.src="https://static.cloudflareinsights.com/beacon.min.js";
+ script.dataset.cfBeacon=JSON.stringify({token:cfg.siteToken.trim()});
+ script.dataset.elAnalytics="cloudflare";
+ document.body.appendChild(script);
+}
 function initHomepage(config,all){
  const branches=config.branches||{},keys=Object.keys(branches),subjects=Object.values(branches).reduce((n,b)=>n+Object.keys(b.subjects||{}).length,0);
  const sources=all.length;if($("statBranches"))$("statBranches").textContent=keys.length;if($("statSubjects"))$("statSubjects").textContent=subjects;if($("statResources"))$("statResources").textContent=sources;
@@ -79,7 +90,7 @@ function configureContacts(site){
 }
 function init(){
  initGeneral();
- fetch("data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("تعذر تحميل البيانات.");return r.json();}).then(config=>{if(!config?.branches)throw new Error("ملف البيانات غير مكتمل.");window.EL_CONFIG=config;const all=collect(config.branches);configureContacts(config.site||{});initHomepage(config,all);document.dispatchEvent(new CustomEvent("el:data-ready",{detail:config}));}).catch(error=>{document.dispatchEvent(new CustomEvent("el:data-error",{detail:{message:error.message}}));const results=$("quickFindResults");if(results){results.hidden=false;results.textContent="تعذّر تحميل المكتبة. تحقق من الاتصال ثم أعد تحميل الصفحة.";}const latest=$("latestEmpty");if(latest){latest.hidden=false;latest.textContent="تعذّر تحميل المصادر حالياً.";} });
+ fetch("data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("تعذر تحميل البيانات.");return r.json();}).then(config=>{if(!config?.branches)throw new Error("ملف البيانات غير مكتمل.");window.EL_CONFIG=config;const all=collect(config.branches);configureContacts(config.site||{});initAnalytics(config.site||{});initHomepage(config,all);document.dispatchEvent(new CustomEvent("el:data-ready",{detail:config}));}).catch(error=>{document.dispatchEvent(new CustomEvent("el:data-error",{detail:{message:error.message}}));const results=$("quickFindResults");if(results){results.hidden=false;results.textContent="تعذّر تحميل المكتبة. تحقق من الاتصال ثم أعد تحميل الصفحة.";}const latest=$("latestEmpty");if(latest){latest.hidden=false;latest.textContent="تعذّر تحميل المصادر حالياً.";} });
 }
 document.addEventListener("DOMContentLoaded",init);
 })();
