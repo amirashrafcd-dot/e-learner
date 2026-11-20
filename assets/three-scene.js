@@ -1,0 +1,34 @@
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const canvas = document.createElement("canvas");
+canvas.className = "three-scene-canvas";
+canvas.setAttribute("aria-hidden", "true");
+document.body.prepend(canvas);
+const fallback = () => { canvas.remove(); document.documentElement.classList.add("three-scene-fallback"); };
+try {
+ const THREE = await import("https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js");
+ const renderer = new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:"low-power"});
+ renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+ renderer.setSize(window.innerWidth,window.innerHeight,false);
+ const scene = new THREE.Scene();
+ const camera = new THREE.PerspectiveCamera(38,window.innerWidth/window.innerHeight,.1,80);
+ camera.position.set(0,0,12);
+ const styles=getComputedStyle(document.documentElement);
+ const tint=(name,fallback)=>{try{return new THREE.Color(styles.getPropertyValue(name).trim()||fallback);}catch{return new THREE.Color(fallback);}};
+ const primary=tint("--primary","#1e6b4b"),sand=tint("--sand","#d9b45b"),accent=tint("--accent","#c8372d");
+ scene.add(new THREE.AmbientLight(0xffffff,1.8));
+ const light=new THREE.DirectionalLight(0xffffff,2.2);light.position.set(4,6,8);scene.add(light);
+ const objects=[];
+ const add=(geometry,color,x,y,z,scale,wire=true)=>{const material=new THREE.MeshPhysicalMaterial({color,metalness:.24,roughness:.38,transparent:true,opacity:wire?.52:.2,wireframe:wire,clearcoat:.5});const mesh=new THREE.Mesh(geometry,material);mesh.position.set(x,y,z);mesh.scale.setScalar(scale);scene.add(mesh);objects.push({mesh,baseY:y,speed:.00012+Math.random()*.00018});};
+ add(new THREE.TorusKnotGeometry(.9,.22,120,12),primary,-4.4,1.8,-3,1.05,true);
+ add(new THREE.IcosahedronGeometry(1.15,1),sand,4.1,-1.5,-4,.9,true);
+ add(new THREE.TorusGeometry(1.05,.045,12,90),accent,3.8,2.3,-5,1.2,false);
+ add(new THREE.OctahedronGeometry(.7,0),primary,-4,-2.4,-4,.9,false);
+ const pointer={x:0,y:0};
+ if(!reducedMotion)window.addEventListener("pointermove",e=>{pointer.x=(e.clientX/window.innerWidth-.5)*.35;pointer.y=(e.clientY/window.innerHeight-.5)*.25;},{passive:true});
+ const resize=()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight,false);};
+ window.addEventListener("resize",resize,{passive:true});
+ let frame=0;
+ const draw=()=>{objects.forEach(({mesh,baseY,speed},i)=>{if(!reducedMotion){mesh.rotation.x+=speed;mesh.rotation.y+=speed*1.35;mesh.position.y=baseY+Math.sin(frame*.006+i)*.08;}});camera.position.x+=(pointer.x-camera.position.x*.025)*.025;camera.position.y+=(-pointer.y-camera.position.y*.025)*.025;renderer.render(scene,camera);frame++;};
+ if(reducedMotion)draw();else renderer.setAnimationLoop(()=>{if(!document.hidden)draw();});
+ document.addEventListener("visibilitychange",()=>{if(document.hidden)renderer.setAnimationLoop(null);else if(!reducedMotion)renderer.setAnimationLoop(draw);});
+} catch(error) { console.info("Three.js enhancement unavailable; CSS fallback remains active.",error);fallback(); }
