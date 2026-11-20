@@ -69,3 +69,17 @@ worker/
 - اضبط مشاركة Drive على «أي شخص لديه الرابط — مشاهد» فقط للملفات المسموح بمشاركتها.
 - لا تضع GitHub token أو كلمة مرور الإدارة في ملفات الواجهة.
 - لم يتم إجراء اختبار شامل عبر كل المتصفحات بعد تحديث المستودع؛ اختبر تحميل البيانات وتسجيل الدخول والحفظ قبل مشاركة رابط الإدارة.
+
+
+## الخط المحلي (Tajawal)
+
+الواجهة تستخدم Tajawal محلياً ولا تعتمد على Google Fonts. ملفات WOFF2 لا تُحمّل من خادم خارجي؛ أضف الملفين التاليين يدوياً إلى مجلد `assets/fonts/`:
+
+1. [تنزيل Tajawal Arabic 400 WOFF2](https://cdn.jsdelivr.net/npm/@fontsource/tajawal@5.3.0/files/tajawal-arabic-400-normal.woff2) واحفظه باسم `tajawal-arabic-400-normal.woff2`.
+2. [تنزيل Tajawal Arabic 700 WOFF2](https://cdn.jsdelivr.net/npm/@fontsource/tajawal@5.3.0/files/tajawal-arabic-700-normal.woff2) واحفظه باسم `tajawal-arabic-700-normal.woff2`.
+
+المسار النهائي للملفين:
+- `assets/fonts/tajawal-arabic-400-normal.woff2`
+- `assets/fonts/tajawal-arabic-700-normal.woff2`
+
+بعد تنزيلهما، ارفع مجلد `assets/fonts/` إلى جذر المستودع مع بقية الملفات. ملف CSS يشير إليهما بمسارات نسبية. الخط مرخّص بموجب SIL Open Font License 1.1؛ احتفظ بنص الترخيص المرفق مع حزمة Fontsource عند إعادة التوزيع.
