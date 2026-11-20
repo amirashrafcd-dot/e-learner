@@ -45,8 +45,8 @@ function validateConfig(data){
       for(const item of list){
         if(!item||typeof item!=="object")return "يوجد مصدر غير صالح.";
         const link=item.url||item.driveUrl||"";
-        if(link){try{if(typeof link!=="string"||!/^https?:\\/\\//i.test(link))return "كل رابط مصدر يجب أن يبدأ بـ https:// أو http://.";const parsed=new URL(link);if(!["https:","http:"].includes(parsed.protocol))return "كل رابط مصدر يجب أن يبدأ بـ https:// أو http://.";}catch{return "يوجد رابط مصدر غير صالح.";}}
-        if(item.mirrorUrl){try{if(typeof item.mirrorUrl!=="string"||!/^https?:\\/\\//i.test(item.mirrorUrl))return "الرابط البديل يجب أن يبدأ بـ https:// أو http://.";const parsed=new URL(item.mirrorUrl);if(!["https:","http:"].includes(parsed.protocol))return "الرابط البديل يجب أن يبدأ بـ https:// أو http://.";}catch{return "يوجد رابط بديل غير صالح.";}}
+        if(link){try{if(typeof link!=="string"||!(link.toLowerCase().startsWith("https://") || link.toLowerCase().startsWith("http://")))return "كل رابط مصدر يجب أن يبدأ بـ https:// أو http://.";const parsed=new URL(link);if(!["https:","http:"].includes(parsed.protocol))return "كل رابط مصدر يجب أن يبدأ بـ https:// أو http://.";}catch{return "يوجد رابط مصدر غير صالح.";}}
+        if(item.mirrorUrl){try{if(typeof item.mirrorUrl!=="string"||!(item.mirrorUrl.toLowerCase().startsWith("https://") || item.mirrorUrl.toLowerCase().startsWith("http://")))return "الرابط البديل يجب أن يبدأ بـ https:// أو http://.";const parsed=new URL(item.mirrorUrl);if(!["https:","http:"].includes(parsed.protocol))return "الرابط البديل يجب أن يبدأ بـ https:// أو http://.";}catch{return "يوجد رابط بديل غير صالح.";}}
       }
     }
   }
