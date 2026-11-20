@@ -1,4 +1,4 @@
-name = "e-learner-content-api"
+name = "e-learner"
 main = "src/index.js"
 compatibility_date = "2026-11-20"
 
