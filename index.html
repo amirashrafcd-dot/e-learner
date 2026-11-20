@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#FBF7EF"><title>e-Learner | مكتبتك الدراسية</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="manifest" href="manifest.webmanifest"><link rel="canonical" href="https://amirashrafcd-dot.github.io/e-learner/"><meta property="og:type" content="website"><meta property="og:title" content="e-Learner | مكتبتك الدراسية"><meta property="og:description" content="مكتبة مصادر التوجيهي الفلسطيني حسب الفرع والمادة."><meta property="og:url" content="https://amirashrafcd-dot.github.io/e-learner/"><meta property="og:image" content="https://amirashrafcd-dot.github.io/e-learner/favicon.svg"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="e-Learner | مكتبتك الدراسية"><meta name="twitter:description" content="مكتبة مصادر التوجيهي الفلسطيني حسب الفرع والمادة."><link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body class="home-page">
   <a class="skip-link" href="#mainContent">تخطّي إلى المحتوى</a>
   <header class="site-header container">
     <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">eL</span><span>e-Learner<small>مساحتك للتعلّم</small></span></a>
@@ -15,11 +15,34 @@
     <div class="header-tools"><button class="theme-toggle" id="themeToggle" type="button" aria-label="تبديل المظهر">☾</button></div>
   </header>
   <main id="mainContent">
-    <section class="hero container">
-      <div class="hero-copy"><span class="eyebrow">مكتبة التوجيهي الفلسطيني</span><h1>مصادرك الدراسية،<br><span>أقرب وأسهل.</span></h1><p class="hero-lead">ابحث عن كتاب أو ملزمة أو اختبار، وانتقل إلى المصدر المناسب حسب الفرع والمادة والصف.</p>
-        <form id="quickFindForm" class="quick-find-form global-search"><label class="sr-only" for="quickFindInput">ابحث في جميع المصادر</label><input id="quickFindInput" type="search" placeholder="ابحث باسم المادة أو المصدر أو المعلم..." autocomplete="off"><button type="submit">بحث</button></form>
+    <section class="hero container" aria-labelledby="heroTitle">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="hero-eyebrow-dot"></span> مكتبة التوجيهي الفلسطيني</span>
+        <h1 id="heroTitle">كل مصادر دراستك،<br><span>في مكان واحد.</span></h1>
+        <p class="hero-lead">ابحث عن الكتب والملازم والاختبارات حسب الفرع والمادة والصف، وافتح المصدر مباشرة بخطوات بسيطة.</p>
+        <form id="quickFindForm" class="quick-find-form global-search">
+          <label class="sr-only" for="quickFindInput">ابحث في جميع المصادر</label>
+          <span class="search-symbol" aria-hidden="true">⌕</span>
+          <input id="quickFindInput" type="search" placeholder="ما المادة أو المصدر الذي تبحث عنه؟" autocomplete="off">
+          <button type="submit">ابحث الآن <span aria-hidden="true">←</span></button>
+        </form>
         <div id="quickFindResults" class="global-results" aria-live="polite" hidden></div>
-        <div class="quick-subjects" id="quickSubjects"></div>
+        <div class="quick-subjects-wrap"><span class="quick-subjects-label">ابدأ بمادة شائعة</span><div class="quick-subjects" id="quickSubjects"></div></div>
+        <div class="hero-footnote"><span class="hero-check" aria-hidden="true">✓</span> تنظيم واضح لمصادر الفرعين العلمي والأدبي</div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-visual-halo"></div>
+        <div class="hero-visual-grid"></div>
+        <div class="hero-orbit hero-orbit-one"></div>
+        <div class="hero-orbit hero-orbit-two"></div>
+        <div class="hero-book-stack">
+          <div class="hero-book hero-book-back"><span>مراجعة</span><small>خطوة أقرب لهدفك</small></div>
+          <div class="hero-book hero-book-mid"><span>توجيهي</span><small>مصادر مرتبة</small></div>
+          <div class="hero-book hero-book-front"><span class="hero-book-mark">eL</span><strong>مساحتك للتعلّم</strong><small>LEARN · GROW · SUCCEED</small></div>
+        </div>
+        <div class="hero-float-card hero-float-top"><span class="hero-float-icon">✦</span><span><b>مصادر منظّمة</b><small>حسب الفرع والمادة</small></span></div>
+        <div class="hero-float-card hero-float-bottom"><span class="hero-float-icon">✓</span><span><b>وصول مباشر</b><small>افتح المصدر بسهولة</small></span></div>
+        <div class="hero-visual-caption">e-Learner <span>•</span> مكتبتك الدراسية</div>
       </div>
     </section>
     <section class="stats container" aria-label="إحصائيات المكتبة">
