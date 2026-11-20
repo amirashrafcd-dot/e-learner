@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /e-learner/control/
+
+Sitemap: https://amirashrafcd-dot.github.io/e-learner/sitemap.xml
