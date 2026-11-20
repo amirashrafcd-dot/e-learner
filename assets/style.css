@@ -90,3 +90,51 @@ html{scroll-behavior:smooth}body{background:var(--bg);color:var(--ink);font-fami
 .tawjihi-subject-results .is-passed{border-inline-start:4px solid var(--primary)}
 .tawjihi-subject-results .is-failed{border-inline-start:4px solid var(--accent)}
 @media(max-width:650px){.tawjihi-rows,.tawjihi-subject-results{grid-template-columns:1fr}.tawjihi-grade-row{grid-template-columns:minmax(0,1fr) 110px}}
+
+/* هوية ثلاثية الأبعاد هادئة — Three.js enhancement */
+html{background:var(--bg)}
+body{background:transparent;isolation:isolate}
+.three-scene-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.24}
+body>*:not(.three-scene-canvas){position:relative;z-index:1}
+.site-header{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--bg) 88%,transparent)}
+.hero,.library-hero,.legal-hero{perspective:1100px}
+.hero-copy,.library-hero>div,.legal-hero>*{transform-style:preserve-3d}
+.hero h1,.library-hero h1,.legal-hero h1{text-shadow:0 12px 35px color-mix(in srgb,var(--primary) 12%,transparent)}
+.branch-card,.resource-card,.tool-panel,.legal-section,.support-card,.identity-card,.institution-preview-card,.about-contact{transform-style:preserve-3d;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.branch-card:hover,.resource-card:hover,.tool-panel:hover,.legal-section:hover,.support-card:hover,.identity-card:hover{transform:translateY(-4px) rotateX(1deg);box-shadow:0 16px 34px #0b1a2514}
+.brand-mark{transform:translateZ(12px);box-shadow:0 9px 22px color-mix(in srgb,var(--primary) 22%,transparent)}
+.btn{min-height:44px;box-shadow:0 8px 18px color-mix(in srgb,var(--primary) 13%,transparent)}
+.institution-preview{padding-top:25px}
+.institution-preview-card{display:flex;align-items:center;justify-content:space-between;gap:28px;padding:30px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(125deg,var(--surface),var(--primary-soft));box-shadow:0 18px 45px #10203012}
+.institution-preview-card h2{margin:6px 0;font-size:clamp(24px,3vw,34px)}
+.institution-preview-card p{max-width:660px;color:var(--muted);margin:0;line-height:2}
+.institution-preview-card .btn{flex-shrink:0}
+.about-page .legal-main{max-width:1040px}
+.about-hero{position:relative;overflow:hidden;padding:44px 38px 38px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(125deg,var(--surface),var(--primary-soft));box-shadow:0 24px 55px #10203014}
+.about-hero:after{content:"eL";position:absolute;left:24px;bottom:-85px;font-size:230px;font-weight:900;line-height:1;color:color-mix(in srgb,var(--primary) 7%,transparent);direction:ltr;pointer-events:none}
+.about-hero h1 span{color:var(--primary)}
+.about-hero p{max-width:760px}
+.about-hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.about-identity-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:24px 0}
+.identity-card{min-height:210px;padding:22px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:0 12px 28px #1020300d;position:relative;overflow:hidden}
+.identity-card:after{content:"";position:absolute;width:150px;height:150px;border:1px solid color-mix(in srgb,var(--primary) 20%,transparent);border-radius:35%;left:-65px;bottom:-85px;transform:rotate(35deg) translateZ(-10px)}
+.identity-symbol{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--primary-soft);color:var(--primary);font-size:22px;margin-bottom:17px;box-shadow:0 8px 20px color-mix(in srgb,var(--primary) 12%,transparent)}
+.identity-card h2{font-size:22px;margin:5px 0}
+.identity-card p{color:var(--muted);font-size:13px;line-height:1.9;margin:0}
+.about-legal-content{margin-top:20px}
+.about-legal-content .legal-section{background:var(--surface)}
+.about-legal-content .legal-section .eyebrow{font-size:10px}
+.about-legal-content .legal-section a{color:var(--primary);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.about-contact{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;margin-top:24px;padding:28px;border:1px solid var(--line);border-radius:18px;background:var(--primary-soft)}
+.about-contact h2{font-size:27px;margin:7px 0}
+.about-contact-copy p{color:var(--muted);line-height:2;margin:0}
+.about-contact-actions{display:grid;gap:10px}
+.contact-method{display:flex;align-items:center;gap:13px;min-height:66px;padding:12px 15px;background:var(--surface);border:1px solid var(--line);border-radius:13px;transition:transform .2s,border-color .2s}
+.contact-method:hover{transform:translateY(-2px);border-color:var(--primary)}
+.contact-method>span:first-child{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:var(--primary-soft);color:var(--primary);font-size:18px}
+.contact-method b,.contact-method small{display:block}
+.contact-method b{font-size:13px}
+.contact-method small{color:var(--muted);font-size:11px;direction:ltr;text-align:right}
+.about-legal-note{font-size:12px;color:var(--muted);margin:18px 2px}
+@media(max-width:760px){.institution-preview-card{align-items:flex-start;flex-direction:column}.about-identity-grid{grid-template-columns:1fr}.identity-card{min-height:0}.about-contact{grid-template-columns:1fr;padding:20px}.about-hero{padding:30px 20px}.about-hero:after{font-size:150px;bottom:-50px}.three-scene-canvas{opacity:.12}}
+@media(prefers-reduced-motion:reduce){.branch-card:hover,.resource-card:hover,.tool-panel:hover,.legal-section:hover,.support-card:hover,.identity-card:hover,.contact-method:hover{transform:none}.three-scene-canvas{display:none}}
