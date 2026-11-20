@@ -79,7 +79,7 @@ function configureContacts(site){
 }
 function init(){
  initGeneral();
- fetch("data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("تعذر تحميل البيانات.");return r.json();}).then(config=>{if(!config?.branches)throw new Error("ملف البيانات غير مكتمل.");window.EL_CONFIG=config;const all=collect(config.branches);configureContacts(config.site||{});initHomepage(config,all);document.dispatchEvent(new CustomEvent("el:data-ready",{detail:config}));}).catch(error=>document.dispatchEvent(new CustomEvent("el:data-error",{detail:{message:error.message}})));
+ fetch("data.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("تعذر تحميل البيانات.");return r.json();}).then(config=>{if(!config?.branches)throw new Error("ملف البيانات غير مكتمل.");window.EL_CONFIG=config;const all=collect(config.branches);configureContacts(config.site||{});initHomepage(config,all);document.dispatchEvent(new CustomEvent("el:data-ready",{detail:config}));}).catch(error=>{document.dispatchEvent(new CustomEvent("el:data-error",{detail:{message:error.message}}));const results=$("quickFindResults");if(results){results.hidden=false;results.textContent="تعذّر تحميل المكتبة. تحقق من الاتصال ثم أعد تحميل الصفحة.";}const latest=$("latestEmpty");if(latest){latest.hidden=false;latest.textContent="تعذّر تحميل المصادر حالياً.";} });
 }
 document.addEventListener("DOMContentLoaded",init);
 })();
