@@ -18,6 +18,7 @@ function initGeneral(){
  document.documentElement.dataset.theme=saved==="light"||saved==="dark"?saved:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
  const theme=$("themeToggle"),paint=()=>{if(theme)theme.textContent=document.documentElement.dataset.theme==="dark"?"☀":"☾";};paint();
  theme?.addEventListener("click",()=>{const next=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=next;try{localStorage.setItem("el-theme",next);}catch{}paint();});
+ if("serviceWorker" in navigator && location.protocol!=="file:"){navigator.serviceWorker.register("service-worker.js",{scope:"./"}).catch(()=>{});}
 }
 function sourceCard(item,{compact=false}={}){
  const url=window.safeURL(item.url||item.driveUrl),mirror=window.safeURL(item.mirrorUrl);
@@ -71,14 +72,51 @@ function initHomepage(config,all){
  const form=$("quickFindForm"),input=$("quickFindInput"),results=$("quickFindResults");form?.addEventListener("submit",e=>{e.preventDefault();globalSearch(input,results,all);results?.scrollIntoView({behavior:"smooth",block:"nearest"});});input?.addEventListener("input",()=>globalSearch(input,results,all));
  const latest=[...all].sort((a,b)=>(Date.parse(b.added||"")||0)-(Date.parse(a.added||"")||0)).slice(0,6),grid=$("latestGrid");if(grid){grid.innerHTML="";latest.forEach(x=>grid.appendChild(sourceCard(x,{compact:true})));if($("latestEmpty"))$("latestEmpty").hidden=latest.length>0;}
  const date=config.site?.examDate||"";if(date&&$("countdownPanel")){const target=toPalestineDate(date);if(target&&!Number.isNaN(target.getTime())){const panel=$("countdownPanel");panel.hidden=false;const update=()=>{const diff=target.getTime()-Date.now();if(diff<=0){$("countdownValue").textContent="بدأ الموعد أو انتهى";$("countdownLabel").textContent="موعد الامتحان المحدد";return;}const d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000);$("countdownValue").textContent=d+" يوم · "+h+" ساعة · "+m+" دقيقة";};update();setInterval(update,60000);}}
- initCalculator();
+ initTawjihiCalculator(config);
  const tg=window.safeURL(config.site?.telegramChannelUrl);if(tg){if($("telegramCallout"))$("telegramCallout").hidden=false;if($("telegramMain"))$("telegramMain").href=tg;if($("telegramLink")){$("telegramLink").hidden=false;$("telegramLink").href=tg;}}
  renderSaved(all);document.addEventListener("el:saved-changed",()=>renderSaved(all));
 }
-function initCalculator(){
- const host=$("gradeRows");if(!host)return;
- const add=()=>{const row=document.createElement("div");row.className="grade-row";row.innerHTML='<label>العلامة<input type="number" min="0" max="100" step="0.01" class="grade-mark" placeholder="مثلاً 90"></label><label>الوزن<input type="number" min="0" step="0.01" class="grade-weight" placeholder="مثلاً 2"></label><button type="button" class="remove-grade" aria-label="حذف المادة">×</button>';row.querySelector("button").addEventListener("click",()=>row.remove());host.appendChild(row);};
- add();add();$("addGradeRow")?.addEventListener("click",add);$("calculateAverage")?.addEventListener("click",()=>{let weighted=0,total=0,valid=true;host.querySelectorAll(".grade-row").forEach(row=>{const mark=Number(row.querySelector(".grade-mark").value),weight=Number(row.querySelector(".grade-weight").value);if(row.querySelector(".grade-mark").value!==""||row.querySelector(".grade-weight").value!==""){if(!Number.isFinite(mark)||mark<0||mark>100||!Number.isFinite(weight)||weight<=0)valid=false;else{weighted+=mark*weight;total+=weight;}}});$("averageResult").textContent=!valid?"تحقق من العلامات والأوزان المدخلة.":total?(weighted/total).toFixed(2)+"%":"أدخل علامة ووزناً لمادة واحدة على الأقل.";});
+function initTawjihiCalculator(config){
+ const host=$("tawjihiCalculator");if(!host)return;
+ const branchSelect=$("tawjihiBranch"),rows=$("tawjihiRows"),result=$("tawjihiResult");
+ const branches=config.branches||{};
+ const maxFor=(branchKey,subject)=>branchKey==="scientific"&&subject==="الرياضيات"?200:branchKey==="literary"&&(subject==="اللغة العربية"||subject==="اللغة الإنجليزية")?150:100;
+ function build(){
+  const branchKey=branchSelect.value,branch=branches[branchKey];rows.innerHTML="";result.textContent="";
+  if(!branch){rows.textContent="لا تتوفر بيانات لهذا الفرع.";return;}
+  Object.keys(branch.subjects||{}).forEach(subject=>{
+   const max=maxFor(branchKey,subject),row=document.createElement("label");row.className="tawjihi-grade-row";
+   const title=document.createElement("span");title.textContent=subject;
+   const input=document.createElement("input");input.type="number";input.inputMode="decimal";input.min="0";input.max=String(max);input.step="0.01";input.placeholder="من "+max;input.dataset.subject=subject;input.setAttribute("aria-label","علامة "+subject+" من "+max);input.required=true;
+   const scale=document.createElement("small");scale.textContent="العلامة من "+max;
+   row.append(title,input,scale);rows.appendChild(row);
+  });
+ }
+ branchSelect?.addEventListener("change",build);
+ $("calculateTawjihi")?.addEventListener("click",()=>{
+  const branchKey=branchSelect.value,branch=branches[branchKey];if(!branch)return;
+  const inputs=[...rows.querySelectorAll("input")];let total=0,maxTotal=0,passed=0,failed=0,missing=[];
+  const details=[];
+  inputs.forEach(input=>{
+   const subject=input.dataset.subject,max=maxFor(branchKey,subject),raw=input.value.trim();maxTotal+=max;
+   if(raw===""){missing.push(subject);return;}
+   const mark=Number(raw);
+   if(!Number.isFinite(mark)||mark<0||mark>max){missing.push(subject+" (علامة غير صالحة)");return;}
+   total+=mark;const ok=mark>=max/2;if(ok)passed++;else failed++;
+   details.push({subject,mark,max,ok});
+  });
+  if(missing.length){result.textContent="أكمل علامات جميع المواد، وتأكد أن كل علامة ضمن الحد الأعلى. المواد المطلوبة: "+missing.join("، ");return;}
+  const percentage=maxTotal?(total/maxTotal)*100:0;
+  const summary=document.createElement("div");summary.className="tawjihi-result-summary";
+  const strong=document.createElement("strong");strong.textContent=percentage.toFixed(2)+"%";
+  const p=document.createElement("p");p.textContent="مجموعك التقديري: "+total.toFixed(2)+" من "+maxTotal;
+  const status=document.createElement("p");status.className="tawjihi-pass-status";status.textContent=failed===0?"حققت نصف العلامة أو أكثر في جميع المواد.":"حققت نصف العلامة أو أكثر في "+passed+" من "+inputs.length+" مواد، وهناك "+failed+" مادة دون النصف.";
+  summary.append(strong,p,status);
+  const list=document.createElement("ul");list.className="tawjihi-subject-results";
+  details.forEach(item=>{const li=document.createElement("li");li.textContent=item.subject+": "+item.mark+" / "+item.max+" — "+(item.ok?"50% أو أكثر":"أقل من 50%");li.className=item.ok?"is-passed":"is-failed";list.appendChild(li);});
+  result.replaceChildren(summary,list);
+ });
+ build();
 }
 function configureContacts(site){
  const email=site.contactEmail||"",phone=String(site.whatsappNumber||"").replace(/\D/g,""),message=site.teacherMessage||"مرحباً، أرغب بالمساهمة بمصدر تعليمي في e-Learner.";
