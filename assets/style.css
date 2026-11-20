@@ -29,6 +29,9 @@
 /* أساسيات عرض الحالة المخفية */
 [hidden]{display:none!important}
 
+/* Tajawal local Arabic WOFF2 subsets */
+@font-face{font-family:"Tajawal";src:url("fonts/tajawal-arabic-400-normal.woff2") format("woff2");font-style:normal;font-weight:400;font-display:swap;unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E,U+2010-2011,U+2026,U+25CC}
+@font-face{font-family:"Tajawal";src:url("fonts/tajawal-arabic-700-normal.woff2") format("woff2");font-style:normal;font-weight:700;font-display:swap;unicode-range:U+0600-06FF,U+0750-077F,U+08A0-08FF,U+FB50-FDFF,U+FE70-FEFF,U+200C-200E,U+2010-2011,U+2026,U+25CC}
 /* المرحلة الثانية: ثيم ورق دراسة دافئ + هوية فلسطينية */
 :root{--bg:#FBF7EF;--surface:#FFFFFF;--ink:#16202B;--text:#16202B;--muted:#5B6672;--line:#E6DECF;--primary:#1E6B4B;--primary-strong:#14513A;--primary-soft:#E3F0E8;--accent:#C8372D;--sand:#D9B45B;--panel:#FFFFFF;--teal:#1E6B4B;--font:"Tajawal","IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;color-scheme:light}
 :root[data-theme="dark"]{--bg:#10171C;--surface:#17212A;--ink:#EDF1F4;--text:#EDF1F4;--muted:#B0BBC4;--line:#35434D;--primary:#4FB587;--primary-strong:#72C99F;--primary-soft:#1B2E27;--accent:#E8685D;--sand:#D9B45B;--panel:#17212A;--teal:#4FB587;color-scheme:dark}
