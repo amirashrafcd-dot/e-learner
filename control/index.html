@@ -1,25 +1,29 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#101b2d">
-  <title>بوابة المحتوى | e-Learner</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/style.css"><link rel="stylesheet" href="admin.css">
-</head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#101b2d"><title>بوابة المحتوى | e-Learner</title><link rel="stylesheet" href="../assets/style.css"><link rel="stylesheet" href="admin.css"></head>
 <body class="control-page">
-  <header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M24 3 43 14v20L24 45 5 34V14Z"/><path d="M15 17h18v5H20v4h11v5H20v2h13v5H15Z"/></svg></span><span>e-Learner<small>بوابة إدارة المحتوى</small></span></a><div class="header-tools"><span class="secure-label">● اتصال مشفّر</span><a class="header-cta" href="../index.html">عرض المنصة ↗</a></div></header>
-  <main class="container control-main">
-    <section id="loginPanel" class="login-panel"><div class="login-emblem">✦</div><span class="eyebrow">مساحة المشرفين فقط</span><h1>أهلاً بعودتك</h1><p>سجّل الدخول لإدارة مكتبة e-Learner وتحديث الموقع مباشرة.</p><form id="loginForm"><label for="passwordInput">كلمة مرور الإدارة</label><input id="passwordInput" type="password" autocomplete="current-password" placeholder="أدخل كلمة المرور" required><button class="btn btn-primary" type="submit">دخول آمن <span>←</span></button><small id="loginMessage" role="status"></small></form><div class="login-foot">هذه البوابة غير مرتبطة بقائمة الموقع العامة.</div></section>
-    <section id="dashboard" hidden>
-      <div class="control-heading"><div><span class="eyebrow">لوحة التحكم · Gaza Galaxy</span><h1>مكتبة المحتوى</h1><p>أضف مصدراً أو عدّله. عند الحفظ تُحدّث بيانات GitHub مباشرة دون تنزيل أو رفع يدوي.</p></div><div class="control-actions"><span id="syncState" class="sync-state">● غير متصل</span><button id="logoutButton" class="btn btn-ghost" type="button">تسجيل الخروج</button></div></div>
-      <div id="controlStats" class="control-stats"></div>
-      <div class="control-grid">
-        <section class="control-card"><div class="control-card-title"><div><span class="eyebrow">المحرر الذكي</span><h2 id="formHeading">إضافة مصدر جديد</h2></div><span class="control-index">01</span></div>
-          <form id="sourceForm" class="source-form"><input type="hidden" id="sourceId"><label>الفرع<select id="branchField"><option value="scientific">العلمي</option><option value="literary">الأدبي</option></select></label><label>المادة<select id="subjectField"></select></label><label>اسم المصدر<input id="titleField" maxlength="150" required placeholder="مثلاً: كتاب الرياضيات — الجزء الأول"></label><div class="form-pair"><label>التصنيف<select id="typeField"><option value="book">كتاب</option><option value="summary">ملزمة</option><option value="exam">اختبار</option><option value="worksheet">ورقة عمل</option></select></label><label>السنة<input id="yearField" inputmode="numeric" maxlength="4" placeholder="2026"></label></div><div class="form-pair"><label>الفصل<select id="termField"><option value="">غير محدد</option><option value="الأول">الأول</option><option value="الثاني">الثاني</option></select></label><label>المعلم / الجهة<input id="teacherField" maxlength="100" placeholder="اسم المعلم أو الوزارة"></label></div><label>وصف المصدر<textarea id="descriptionField" rows="3" maxlength="350" placeholder="نبذة قصيرة تساعد الطالب على الاختيار"></textarea></label><label>رابط الملف أو المصدر<input id="urlField" type="url" required placeholder="https://drive.google.com/file/d/.../view"></label><div class="source-actions"><button class="btn btn-primary" id="saveSource" type="submit">حفظ ونشر التعديل ↗</button><button class="btn btn-ghost" id="cancelEdit" type="button" hidden>إلغاء التعديل</button></div><p id="formMessage" class="form-message" role="status"></p><p class="hint-line">الملفات تبقى في Google Drive أو مصدرها الأصلي؛ المنصة تحفظ الرابط والبيانات الوصفية فقط.</p></form>
-        </section>
-        <section class="control-card"><div class="control-card-title"><div><span class="eyebrow">إدارة المكتبة</span><h2>المصادر المنشورة</h2></div><span class="control-index">02</span></div><div class="list-toolbar"><input id="listSearch" type="search" placeholder="ابحث بالاسم أو المادة أو المعلم..."><select id="listBranch"><option value="all">كل الفروع</option><option value="scientific">العلمي</option><option value="literary">الأدبي</option></select></div><div id="sourceList" class="source-list"></div><div class="list-foot"><span>كل حفظ ينشئ Commit جديداً في مستودع GitHub.</span><a href="https://github.com/amirashrafcd-dot/e-learner" target="_blank" rel="noopener">فتح المستودع ↗</a></div></section>
-      </div>
-    </section>
-  </main>
-  <script src="config.js"></script><script src="admin.js"></script>
-</body></html>
+<header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">eL</span><span>e-Learner<small>بوابة إدارة المحتوى</small></span></a><div class="header-tools"><span class="secure-label">● اتصال مشفّر</span><a class="header-cta" href="../index.html">عرض المنصة ↗</a></div></header>
+<main class="container control-main">
+<section id="loginPanel" class="login-panel"><div class="login-emblem">✦</div><span class="eyebrow">مساحة المشرفين فقط</span><h1>أهلاً بعودتك</h1><p>سجّل الدخول لإدارة مكتبة e-Learner.</p><form id="loginForm"><label for="passwordInput">كلمة مرور الإدارة</label><input id="passwordInput" type="password" autocomplete="current-password" required><button class="btn btn-primary" type="submit">دخول آمن ←</button><small id="loginMessage" role="status"></small></form><div class="login-foot">لا تحفظ البوابة كلمة المرور في التخزين المحلي.</div></section>
+<section id="dashboard" hidden>
+<div class="control-heading"><div><span class="eyebrow">لوحة التحكم · Gaza Galaxy</span><h1>مكتبة المحتوى</h1><p>إدارة المصادر والمواد وإعدادات الموقع. الحفظ يتم مباشرة في GitHub.</p></div><div class="control-actions"><span id="syncState" class="sync-state">● غير متصل</span><button id="logoutButton" class="btn btn-ghost" type="button">تسجيل الخروج</button></div></div>
+<div id="controlStats" class="control-stats"></div>
+<div class="control-grid">
+<section class="control-card"><div class="control-card-title"><div><span class="eyebrow">المحرر</span><h2 id="formHeading">إضافة مصدر جديد</h2></div></div>
+<form id="sourceForm" class="source-form">
+<label>الفرع<select id="branchField"></select></label><label>المادة<select id="subjectField"></select></label>
+<label>اسم المصدر<input id="titleField" maxlength="150" required></label>
+<div class="form-pair"><label>نوع المصدر<select id="typeField"><option value="book">كتاب</option><option value="summary">ملزمة</option><option value="exam">اختبار</option><option value="worksheet">ورقة عمل</option><option value="solution">حلول</option><option value="pastExam">امتحان وزارة سابق</option><option value="video">شرح فيديو</option></select></label><label>الصف<select id="gradeField"><option value="">غير محدد</option><option value="11">الحادي عشر</option><option value="12">الثاني عشر</option></select></label></div>
+<div class="form-pair"><label>الوحدة<input id="unitField" maxlength="100"></label><label>السنة<input id="yearField" inputmode="numeric" maxlength="4"></label></div>
+<div class="form-pair"><label>الفصل<select id="termField"><option value="">غير محدد</option><option value="الأول">الأول</option><option value="الثاني">الثاني</option></select></label><label>المعلم / الجهة<input id="teacherField" maxlength="100"></label></div>
+<label>وصف المصدر<textarea id="descriptionField" rows="3" maxlength="350"></textarea></label>
+<label>الرابط الأساسي<input id="urlField" type="url" required placeholder="https://..."></label><label>رابط بديل (اختياري)<input id="mirrorUrlField" type="url" placeholder="https://..."></label>
+<div class="source-actions"><button class="btn btn-primary" type="submit" id="saveSource">حفظ ونشر ↗</button><button class="btn btn-ghost" id="cancelEdit" type="button" hidden>إلغاء</button></div><p id="formMessage" class="form-message" role="status"></p>
+</form></section>
+<section class="control-card"><div class="control-card-title"><div><span class="eyebrow">إدارة المكتبة</span><h2>المصادر المنشورة</h2></div></div>
+<div class="list-toolbar"><input id="listSearch" type="search" placeholder="ابحث بالاسم أو المادة..."><select id="listBranch"></select></div><div id="sourceList" class="source-list"></div>
+<hr><h3>إدارة المواد</h3><div class="form-pair"><select id="subjectBranch"></select><select id="managedSubject"></select></div><div class="source-actions"><input id="newSubjectName" placeholder="اسم المادة"><button id="addSubject" type="button">إضافة مادة</button><button id="renameSubject" type="button">إعادة تسمية</button><button id="deleteSubject" type="button">حذف المادة</button></div>
+</section></div>
+<section class="control-card" style="margin-top:18px"><h2>إعدادات الموقع</h2><form id="settingsForm" class="source-form">
+<label>البريد الإلكتروني<input id="siteEmail" type="email"></label><label>رقم واتساب دولي (اختياري)<input id="siteWhatsapp" placeholder="مثال: 9705xxxxxxxx"></label><label>رابط قناة تيليغرام<input id="siteTelegram" type="url"></label><label>موعد الامتحان<input id="siteExamDate" type="datetime-local"></label><label>رسالة المعلمين<textarea id="siteTeacherMessage" rows="2"></textarea></label><button class="btn btn-primary" type="submit">حفظ إعدادات الموقع</button><p id="settingsMessage" class="form-message" role="status"></p></form></section>
+</section></main><script src="config.js"></script><script src="admin.js"></script></body></html>
