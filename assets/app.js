@@ -57,7 +57,18 @@
       const config = await response.json();
       if (!config || !config.branches || !config.site) throw new Error("بنية ملف البيانات غير مكتملة.");
       window.EL_CONFIG = config;
-      configureSite(config.site, config.branches);
+      configureSite(config.site, config.branches);\n      initQuickFind(config.branches);
+  function initQuickFind(branches) {
+    const form=$("quickFindForm"), input=$("quickFindInput"), results=$("quickFindResults");
+    if(!form||!input||!results)return;
+    const normalize=value=>String(value||"").toLocaleLowerCase("ar").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/[\u064B-\u065F\u0670]/g,"").trim();
+    const subjects=Object.entries(branches).flatMap(([key,b])=>Object.keys(b.subjects||{}).map(subject=>({key,subject,branch:b.name||key})));
+    const show=()=>{const q=normalize(input.value),matches=q?subjects.filter(x=>normalize(x.subject).includes(q)||normalize(x.branch).includes(q)).slice(0,8):[];results.innerHTML=matches.map(x=>'<a href="branch.html?branch='+encodeURIComponent(x.key)+'&subject='+encodeURIComponent(x.subject)+'"><span>'+escapeHTML(x.subject)+'</span><small>الفرع '+escapeHTML(x.branch)+'</small><b>←</b></a>').join("");results.hidden=!matches.length;};
+    input.addEventListener("input",show);
+    form.addEventListener("submit",event=>{event.preventDefault();show();const first=results.querySelector("a");if(first)location.href=first.href;else input.focus();});
+    document.addEventListener("click",event=>{if(!form.contains(event.target))results.hidden=true;});
+  }
+
       document.dispatchEvent(new CustomEvent("el:data-ready", {detail:config}));
     } catch (error) {
       document.dispatchEvent(new CustomEvent("el:data-error", {detail:{message:error.message}}));
