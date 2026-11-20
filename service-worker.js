@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "e-learner-cache-v2";
+const VERSION = "e-learner-cache-v3";
 const ROOT = new URL("./", self.registration.scope);
 const OFFLINE_URL = new URL("offline.html", ROOT).href;
 const PRECACHE = [
