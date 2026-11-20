@@ -1,11 +1,11 @@
 "use strict";
-const VERSION = "e-learner-cache-v1";
+const VERSION = "e-learner-cache-v2";
 const ROOT = new URL("./", self.registration.scope);
 const OFFLINE_URL = new URL("offline.html", ROOT).href;
 const PRECACHE = [
   ROOT.href, "index.html", "branch.html", "offline.html", "404.html", "data.json",
   "manifest.webmanifest", "favicon.svg", "icons/icon-192.svg", "icons/icon-512.svg",
-  "assets/style.css", "assets/app.js", "assets/library.js"
+  "assets/style.css", "assets/app.js", "assets/library.js", "assets/three-scene.js"
 ].map(path => new URL(path, ROOT).href);
 
 self.addEventListener("install", event => {
