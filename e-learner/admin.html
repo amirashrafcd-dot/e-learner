@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b2d"><title>إدارة المحتوى | e-Learner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="admin-page">
+  <header class="site-header"><a class="brand" href="index.html"><span class="brand-mark">e</span><span>e-Learner<small>Gaza Galaxy</small></span></a><a class="header-cta" href="index.html">العودة للموقع ←</a></header>
+  <main class="container admin-main">
+    <div class="breadcrumb"><a href="index.html">الرئيسية</a><span>/</span><span>إدارة المحتوى</span></div>
+    <section class="library-hero"><div><span class="eyebrow">لوحة إدارة المكتبة</span><h1>إدارة المصادر</h1><p>أضف الكتب والملازم والاختبارات وأوراق العمل، ثم صدّر ملف البيانات المحدّث.</p></div><div class="library-symbol">⚙</div></section>
+    <div class="admin-notice"><b>تنبيه بخصوص الحفظ:</b> هذه لوحة إدارة ثابتة تعمل داخل متصفحك. التعديلات تبقى في الجلسة الحالية حتى تصدير ملف <code>data.js</code> واستبدال النسخة الموجودة في مشروع GitHub. لا يوجد حفظ مباشر على الموقع أو على Google Drive.</div>
+    <section class="admin-stats" id="adminStats"></section>
+    <div class="admin-columns">
+      <section class="admin-panel">
+        <div class="panel-heading"><div><span class="eyebrow">إضافة وتحرير</span><h2 id="formTitle">إضافة مصدر جديد</h2></div><span class="admin-step">01</span></div>
+        <form id="resourceForm" class="admin-form">
+          <input type="hidden" id="editId">
+          <label>الفرع<select id="branchSelect" required><option value="scientific">العلمي</option><option value="literary">الأدبي</option></select></label>
+          <label>المادة<select id="subjectSelect" required></select></label>
+          <label>عنوان المصدر<input id="titleInput" required maxlength="140" placeholder="مثال: ملزمة التفاضل والتكامل"></label>
+          <label>نوع المصدر<select id="typeInput" required><option value="book">كتاب</option><option value="summary">ملزمة</option><option value="exam">اختبار</option><option value="worksheet">ورقة عمل</option></select></label>
+          <div class="admin-form-pair"><label>اسم الأستاذ / الجهة<input id="teacherInput" maxlength="100" placeholder="اسم المعلم أو الوزارة"></label><label>السنة الدراسية<input id="yearInput" inputmode="numeric" maxlength="4" placeholder="2026"></label></div>
+          <label>الفصل الدراسي<select id="termInput"><option value="">غير محدد</option><option value="الأول">الأول</option><option value="الثاني">الثاني</option></select></label>
+          <label>وصف مختصر<textarea id="descriptionInput" rows="3" maxlength="300" placeholder="ماذا يتضمن هذا المصدر؟"></textarea></label>
+          <label>رابط Google Drive أو المصدر<input id="urlInput" type="url" required placeholder="https://drive.google.com/file/d/.../view"></label>
+          <div class="admin-form-actions"><button class="btn btn-primary" type="submit" id="saveButton">إضافة المصدر</button><button class="btn btn-ghost" type="button" id="cancelEdit" hidden>إلغاء التعديل</button></div>
+          <p class="form-message" id="formMessage" role="status"></p>
+        </form>
+      </section>
+      <section class="admin-panel">
+        <div class="panel-heading"><div><span class="eyebrow">المكتبة الحالية</span><h2>المصادر المضافة</h2></div><span class="admin-step">02</span></div>
+        <div class="admin-list-tools"><input id="adminSearch" type="search" placeholder="ابحث في المصادر..."><select id="adminBranchFilter"><option value="all">كل الفروع</option><option value="scientific">العلمي</option><option value="literary">الأدبي</option></select></div>
+        <div id="adminResourceList" class="admin-resource-list"></div>
+        <div class="admin-export"><div><b>جاهز للنشر؟</b><span>صدّر ملف البيانات ثم ارفعه إلى مستودع GitHub.</span></div><button class="btn btn-primary" type="button" id="exportButton">تنزيل data.js ↓</button></div>
+      </section>
+    </div>
+    <section class="drive-guide"><div><span class="eyebrow">هيكل Google Drive المقترح</span><h2>رتّب ملفاتك مرة واحدة</h2><p>أنشئ المجلدات بهذا التسلسل، ثم انسخ رابط مشاركة كل ملف إلى لوحة الإدارة.</p></div><pre>e-Learner Library/
+├── العلمي/
+│   ├── اللغة العربية/ (كتب، ملازم، اختبارات، أوراق عمل)
+│   ├── الرياضيات/
+│   ├── الفيزياء/
+│   └── ... بقية المواد
+└── الأدبي/
+    ├── اللغة العربية/
+    ├── التاريخ/
+    ├── الجغرافيا/
+    └── ... بقية المواد</pre></section>
+  </main>
+  <footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark">e</span><span>e-Learner<small>Gaza Galaxy</small></span></a><p>© <span id="year"></span> e-Learner</p><a href="mailto:gaza.galaxy.edu@gmail.com">الدعم الفني</a></footer>
+  <script src="data.js"></script><script src="assets/admin.js"></script>
+</body></html>
