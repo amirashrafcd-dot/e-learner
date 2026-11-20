@@ -71,3 +71,22 @@ html{scroll-behavior:smooth}body{background:var(--bg);color:var(--ink);font-fami
 .legal-footer-links a{color:var(--muted);font-size:12px}
 .legal-footer-links a:hover{color:var(--teal)}
 @media(max-width:650px){.legal-main{padding-top:30px;padding-bottom:50px}.legal-section{padding:17px}.legal-section p,.legal-section li{font-size:13px}}
+
+/* PWA وحاسبة معدل التوجيهي */
+.tawjihi-rows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}
+.tawjihi-grade-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,130px);gap:4px 10px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.tawjihi-grade-row span{font-weight:700;font-size:14px}
+.tawjihi-grade-row input,.calculator-branch-label+select{width:100%;min-height:44px;border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:var(--surface);color:var(--ink)}
+.tawjihi-grade-row small{grid-column:1/-1;color:var(--muted);font-size:11px}
+.calculator-branch-label{display:block;margin:12px 0 6px;color:var(--muted);font-size:13px}
+.calculator-branch-label+select{max-width:260px}
+.tawjihi-result{margin-top:14px}
+.tawjihi-result-summary{padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--primary-soft)}
+.tawjihi-result-summary strong{display:block;color:var(--primary);font-size:32px;line-height:1.4}
+.tawjihi-result-summary p{margin:5px 0;color:var(--ink)}
+.tawjihi-pass-status{font-weight:700}
+.tawjihi-subject-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;list-style:none;padding:0;margin:12px 0}
+.tawjihi-subject-results li{padding:8px 10px;border:1px solid var(--line);border-radius:9px;font-size:12px}
+.tawjihi-subject-results .is-passed{border-inline-start:4px solid var(--primary)}
+.tawjihi-subject-results .is-failed{border-inline-start:4px solid var(--accent)}
+@media(max-width:650px){.tawjihi-rows,.tawjihi-subject-results{grid-template-columns:1fr}.tawjihi-grade-row{grid-template-columns:minmax(0,1fr) 110px}}
