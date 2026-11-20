@@ -8,7 +8,12 @@
     "whatsappNumber": "",
     "telegramChannelUrl": "",
     "examDate": "",
-    "teacherMessage": "مرحباً، أرغب بالمساهمة بمحتوى تعليمي في منصة e-Learner التابعة لـ Gaza Galaxy."
+    "teacherMessage": "مرحباً، أرغب بالمساهمة بمحتوى تعليمي في منصة e-Learner التابعة لـ Gaza Galaxy.",
+    "analytics": {
+      "provider": "",
+      "enabled": false,
+      "siteToken": ""
+    }
   },
   "branches": {
     "scientific": {
