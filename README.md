@@ -83,3 +83,34 @@ worker/
 - `assets/fonts/tajawal-arabic-700-normal.woff2`
 
 بعد تنزيلهما، ارفع مجلد `assets/fonts/` إلى جذر المستودع مع بقية الملفات. ملف CSS يشير إليهما بمسارات نسبية. الخط مرخّص بموجب SIL Open Font License 1.1؛ احتفظ بنص الترخيص المرفق مع حزمة Fontsource عند إعادة التوزيع.
+
+
+## الصفحات المؤسسية والقانونية
+
+أضيفت الصفحات الثابتة التالية:
+- `about.html`: تعريف المنصة والجهة المشرفة.
+- `copyright.html`: آلية استقبال طلبات حقوق النشر وإزالة الروابط.
+- `privacy.html`: توضيح التخزين المحلي وأداة الإحصاءات عند تفعيلها.
+- `terms.html`: شروط الاستخدام العامة.
+
+هذه نصوص تشغيلية عامة وليست استشارة قانونية؛ ينبغي مراجعتها واعتمادها قانونياً قبل اعتبارها سياسة نهائية.
+
+## إحصاءات الزيارات الاختيارية (Cloudflare Web Analytics)
+
+الإحصاءات معطّلة افتراضياً. في `data.json` ستجد:
+
+```json
+"analytics": {
+  "provider": "",
+  "enabled": false,
+  "siteToken": ""
+}
+```
+
+للتفعيل:
+1. افتح Cloudflare Dashboard ثم Web Analytics وأضف موقعك/اسم المضيف.
+2. افتح Manage site وانسخ Site Token من المقتطف الذي توفره Cloudflare.
+3. عدّل الحقول داخل `site.analytics` في `data.json` إلى `provider: "cloudflare"` و`enabled: true` وضع الرمز في `siteToken`.
+4. ارفع `data.json` إلى GitHub وانتظر نشر الموقع. لا تضف المقتطف يدوياً إلى HTML؛ يقوم `assets/app.js` بتحميله فقط عند اكتمال هذه الشروط.
+
+لإيقاف الإحصاءات، اجعل `enabled` تساوي `false` أو أفرغ `siteToken`. الرمز المخصص لوسم Web Analytics ليس كلمة مرور أو GitHub token؛ استخدم الرمز الذي أنشأته للمضيف الصحيح فقط. توضح وثائق Cloudflare أن المقتطف اليدوي يحمّل beacon من `static.cloudflareinsights.com` ويرسل بيانات القياس إلى Cloudflare. راجع [خطوات التفعيل الرسمية](https://developers.cloudflare.com/web-analytics/get-started/) و[شرح مصدر البيانات وجمعها](https://developers.cloudflare.com/web-analytics/data-metrics/data-origin-and-collection/).
