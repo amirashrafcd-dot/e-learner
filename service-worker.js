@@ -3,7 +3,7 @@ const VERSION = "e-learner-cache-v1";
 const ROOT = new URL("./", self.registration.scope);
 const OFFLINE_URL = new URL("offline.html", ROOT).href;
 const PRECACHE = [
-  "index.html", "branch.html", "offline.html", "404.html", "data.json",
+  ROOT.href, "index.html", "branch.html", "offline.html", "404.html", "data.json",
   "manifest.webmanifest", "favicon.svg", "icons/icon-192.svg", "icons/icon-512.svg",
   "assets/style.css", "assets/app.js", "assets/library.js"
 ].map(path => new URL(path, ROOT).href);
@@ -33,7 +33,7 @@ self.addEventListener("fetch", event => {
 });
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(VERSION);
-  const cached = await cache.match(request);
+  const cached = await cache.match(request, { ignoreSearch: request.mode === "navigate" });
   const network = fetch(request).then(response => {
     if (response && response.ok && response.type === "basic") cache.put(request, response.clone());
     return response;
