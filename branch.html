@@ -2,31 +2,47 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="مكتبة e-Learner لمصادر التوجيهي">
-  <meta name="theme-color" content="#101b2d">
-  <title>المواد الدراسية | e-Learner</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="assets/style.css">
+  <meta name="description" content="مكتبة e-Learner لمصادر التوجيهي الفلسطيني">
+  <meta name="theme-color" content="#101b2d"><title>المواد الدراسية | e-Learner</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="stylesheet" href="assets/style.css">
 </head>
 <body class="library-page">
-  <header class="site-header"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 3 43 14v20L24 45 5 34V14Z"/><path d="M15 17h18v5H20v4h11v5H20v2h13v5H15Z"/></svg></span><span>e-Learner<small>مساحتك للتعلّم</small></span></a><button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">☰</button><nav id="mainNav"><a href="index.html">الرئيسية</a><a id="scientificNav" href="branch.html?branch=scientific">العلمي</a><a id="literaryNav" href="branch.html?branch=literary">الأدبي</a></nav><div class="header-tools"><button class="theme-toggle" id="themeToggle" type="button" aria-label="تبديل المظهر" title="تبديل المظهر">☼</button><a class="header-cta" href="index.html#contact">ساهم معنا <span>←</span></a></div></header>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">eL</span><span>e-Learner<small>مساحتك للتعلّم</small></span></a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="فتح القائمة">☰</button>
+    <nav id="mainNav"><a href="index.html">الرئيسية</a><a id="scientificNav" href="branch.html?branch=scientific">العلمي</a><a id="literaryNav" href="branch.html?branch=literary">الأدبي</a></nav>
+    <div class="header-tools"><button class="theme-toggle" id="themeToggle" type="button" aria-label="تبديل المظهر">☼</button><a class="header-cta" href="index.html#contact">ساهم معنا ←</a></div>
+  </header>
   <main class="container library-main">
     <div class="breadcrumb"><a href="index.html">الرئيسية</a><span>/</span><span id="branchBreadcrumb">الفرع العلمي</span></div>
-    <section class="library-hero"><div><span class="eyebrow">مكتبتك الدراسية</span><h1 id="branchTitle">الفرع العلمي</h1><p id="branchDescription">كل مصادر موادك الدراسية في مكان واحد.</p></div><div class="library-symbol" id="branchSymbol">∑</div></section>
+    <section class="library-hero"><div><span class="eyebrow">مكتبتك الدراسية</span><h1 id="branchTitle">الفرع العلمي</h1><p id="branchDescription">مصادر موادك الدراسية في مكان واحد.</p></div><div class="library-symbol" id="branchSymbol">∑</div></section>
     <section class="library-layout">
-      <aside class="subject-sidebar"><div class="sidebar-title">المواد الدراسية <span id="subjectCount"></span></div><div id="subjectList" class="subject-list"></div></aside>
+      <aside class="subject-sidebar"><div class="sidebar-title">المواد الدراسية <span id="subjectCount">0</span></div><div id="subjectList" class="subject-list"></div></aside>
       <div class="resource-area">
-        <div class="resource-heading"><div><span class="eyebrow">مكتبة المادة</span><h2 id="subjectTitle">اختر مادة للبدء</h2><p id="resourceCount">تصفح المصادر المتاحة</p></div><div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="ابحث عن كتاب أو اختبار..." aria-label="ابحث في المصادر"></div></div>
-        <div class="filter-row" id="filterRow"><button class="filter-chip active" data-filter="all">الكل <span id="countAll">0</span></button><button class="filter-chip" data-filter="book">الكتب</button><button class="filter-chip" data-filter="summary">الملازم</button><button class="filter-chip" data-filter="exam">الاختبارات</button><button class="filter-chip" data-filter="worksheet">أوراق العمل</button></div>
-        <div class="extra-filters"><select id="sortFilter" aria-label="ترتيب المصادر"><option value="newest">الأحدث أولاً</option><option value="oldest">الأقدم أولاً</option><option value="az">الاسم أ-ي</option></select><select id="termFilter" aria-label="الفصل الدراسي"><option value="">كل الفصول</option><option value="الأول">الفصل الأول</option><option value="الثاني">الفصل الثاني</option></select><select id="yearFilter" aria-label="السنة الدراسية"><option value="">كل السنوات</option></select><span id="activeSubjectHint"></span><span id="visibleCount" class="visible-count" aria-live="polite"></span></div>
+        <div class="resource-heading"><div><span class="eyebrow">مكتبة المادة</span><h2 id="subjectTitle">اختر مادة للبدء</h2><p id="resourceCount">تصفح المصادر المتاحة</p></div><div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="ابحث في المصادر..." aria-label="ابحث في المصادر"></div></div>
+        <div class="filter-row" id="filterRow">
+          <button class="filter-chip active" type="button" data-filter="all" aria-pressed="true">الكل <span data-count>0</span></button>
+          <button class="filter-chip" type="button" data-filter="book" aria-pressed="false">الكتب <span data-count>0</span></button>
+          <button class="filter-chip" type="button" data-filter="summary" aria-pressed="false">الملازم <span data-count>0</span></button>
+          <button class="filter-chip" type="button" data-filter="exam" aria-pressed="false">الاختبارات <span data-count>0</span></button>
+          <button class="filter-chip" type="button" data-filter="worksheet" aria-pressed="false">أوراق العمل <span data-count>0</span></button>
+          <button class="filter-chip" type="button" data-filter="solution" aria-pressed="false">الحلول <span data-count>0</span></button>
+          <button class="filter-chip" type="button" data-filter="pastExam" aria-pressed="false">امتحانات الوزارة <span data-count>0</span></button>
+          <button class="filter-chip" type="button" data-filter="video" aria-pressed="false">شرح فيديو <span data-count>0</span></button>
+        </div>
+        <div class="extra-filters">
+          <select id="gradeFilter" aria-label="الصف الدراسي"><option value="">كل الصفوف</option><option value="11">الحادي عشر</option><option value="12">الثاني عشر</option></select>
+          <select id="sortFilter" aria-label="ترتيب المصادر"><option value="newest">الأحدث أولاً</option><option value="oldest">الأقدم أولاً</option><option value="az">الاسم أ-ي</option></select>
+          <select id="termFilter" aria-label="الفصل الدراسي"><option value="">كل الفصول</option><option value="الأول">الفصل الأول</option><option value="الثاني">الفصل الثاني</option></select>
+          <select id="yearFilter" aria-label="السنة الدراسية"><option value="">كل السنوات</option></select>
+          <span id="activeSubjectHint"></span><span id="visibleCount" class="visible-count" aria-live="polite"></span>
+        </div>
         <div id="resourceGrid" class="resource-grid"></div>
-        <div id="emptyState" class="empty-state" hidden><span>⌕</span><h3>لا توجد نتائج مطابقة</h3><p>جرّب تغيير كلمات البحث أو الفلاتر، أو اختر مادة أخرى.</p></div>
+        <div id="emptyState" class="empty-state" hidden><span>⌕</span><h3>لا توجد نتائج</h3><p>غيّر الفلاتر أو اقترح مصدراً للمادة.</p></div>
       </div>
     </section>
-    <div class="contribute-strip"><div><b>هل لديك مصدر مفيد؟</b><span>ساعدنا في إثراء مكتبة هذه المادة بمصدر موثوق.</span></div><a id="contributeLink" href="#" target="_blank" rel="noopener">اقترح إضافة مصدر ↗</a></div>
+    <div class="contribute-strip"><div><b>هل لديك مصدر مفيد؟</b><span>ساعدنا في إثراء مكتبة هذه المادة بمصدر موثوق.</span></div><a id="contributeLink" href="#">اقترح إضافة مصدر ↗</a></div>
   </main>
-  <footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 3 43 14v20L24 45 5 34V14Z"/><path d="M15 17h18v5H20v4h11v5H20v2h13v5H15Z"/></svg></span><span>e-Learner<small>مساحتك للتعلّم</small></span></a><p>© <span id="year"></span> e-Learner</p><a href="index.html">العودة للرئيسية ↑</a></footer>
-  <script src="data.js"></script><script src="assets/app.js"></script><script src="assets/library.js"></script>
+  <footer class="site-footer container"><a class="brand" href="index.html"><span class="brand-mark">eL</span><span>e-Learner<small>مساحتك للتعلّم</small></span></a><p>© <span id="year"></span> e-Learner</p><a href="index.html">العودة للرئيسية ↑</a></footer>
+  <script src="assets/app.js"></script><script src="assets/library.js"></script>
 </body></html>
