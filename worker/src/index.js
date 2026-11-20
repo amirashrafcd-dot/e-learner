@@ -23,7 +23,7 @@ export default {
     }
     if(request.method==="PUT"){
       let body;try{body=await request.json();}catch{return respond({error:"صيغة الطلب غير صالحة."},400);}
-      if(typeof body.source!=="string"||new TextEncoder().encode(body.source).byteLength>MAX_BYTES)return respond({error:"حجم ملف البيانات يجب أن يكون أقل من 900KB."},413);
+      if(typeof body.source!=="string"||new TextEncoder().encode(body.source).byteLength>=MAX_BYTES)return respond({error:"حجم ملف البيانات يجب أن يكون أقل من 900KB."},413);
       let parsed;try{parsed=JSON.parse(body.source);}catch{return respond({error:"ملف البيانات ليس JSON صالحاً."},400);}
       const validation=validateConfig(parsed);if(validation)return respond({error:validation},400);
       const current=await githubRequest(env,"GET",contentsUrl(env));let sha="";
@@ -45,8 +45,8 @@ function validateConfig(data){
       for(const item of list){
         if(!item||typeof item!=="object")return "يوجد مصدر غير صالح.";
         const link=item.url||item.driveUrl||"";
-        if(link){try{const parsed=new URL(link);if(!["https:","http:"].includes(parsed.protocol))return "كل رابط مصدر يجب أن يبدأ بـ https:// أو http://.";}catch{return "يوجد رابط مصدر غير صالح.";}}
-        if(item.mirrorUrl){try{const parsed=new URL(item.mirrorUrl);if(!["https:","http:"].includes(parsed.protocol))return "الرابط البديل يجب أن يبدأ بـ https:// أو http://.";}catch{return "يوجد رابط بديل غير صالح.";}}
+        if(link){try{if(typeof link!=="string"||!/^https?:\\/\\//i.test(link))return "كل رابط مصدر يجب أن يبدأ بـ https:// أو http://.";const parsed=new URL(link);if(!["https:","http:"].includes(parsed.protocol))return "كل رابط مصدر يجب أن يبدأ بـ https:// أو http://.";}catch{return "يوجد رابط مصدر غير صالح.";}}
+        if(item.mirrorUrl){try{if(typeof item.mirrorUrl!=="string"||!/^https?:\\/\\//i.test(item.mirrorUrl))return "الرابط البديل يجب أن يبدأ بـ https:// أو http://.";const parsed=new URL(item.mirrorUrl);if(!["https:","http:"].includes(parsed.protocol))return "الرابط البديل يجب أن يبدأ بـ https:// أو http://.";}catch{return "يوجد رابط بديل غير صالح.";}}
       }
     }
   }
